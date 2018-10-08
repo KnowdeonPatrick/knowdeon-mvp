@@ -1,0 +1,8 @@
+.vscode/
+migrations/
+__pycache__/
+*.log
+*.pot
+*.pyc
+db.sqlite3
+params.json
