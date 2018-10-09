@@ -11,22 +11,25 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import json
 from knowdeon.password_validators import NumberValidator
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+with open(os.path.join(BASE_DIR, 'params.json'), encoding="utf8") as json_data:
+   local_settings = json.load(json_data)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ufn0x1u=d8doa6uoe1r#0@c6waom+esp)2)^l07ird^hprc%p+'
+SECRET_KEY = local_settings['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = local_settings['DEBUG']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = local_settings['ALLOWED_HOSTS']
 
 
 # Application definition
@@ -82,16 +85,16 @@ WSGI_APPLICATION = 'knowdeon.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "knowdeon",
-        "USER": "root",
-        "PASSWORD": "",
-        "HOST": "localhost",
-        "PORT": ""
-    }
-}
+DATABASES = local_settings['DATABASES'] #{
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": "knowdeon",
+#         "USER": "root",
+#         "PASSWORD": "",
+#         "HOST": "localhost",
+#         "PORT": ""
+#     }
+# }
 
 LOGIN_REDIRECT_URL = "/student_dashboard/index/"
 
@@ -144,3 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
