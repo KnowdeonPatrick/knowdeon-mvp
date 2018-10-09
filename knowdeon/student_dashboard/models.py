@@ -27,19 +27,32 @@ class Module(models.Model):
     is_active = models.BooleanField(default=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
+class Chapter(models.Model):
+    chapter_name = models.CharField(max_length=256, default='')
+    chapter_overview = models.TextField(max_length=2000, default='')
+    is_active = models.BooleanField(default=True)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+
 class Section(models.Model):
     section_name = models.CharField(max_length=256, default='')
-    section_text = models.TextField(max_length=2000, default='')
+    section_overview = models.TextField(max_length=2000, default='')
+    is_active = models.BooleanField(default=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+
+class Item(models.Model):
+    item_name = models.CharField(max_length=256, default='')
+    item_text = models.TextField(max_length=2000, default='')
     video_link = models.CharField(max_length=256, default='') # path or url
     quiz = models.TextField(max_length=2000, default='') # embeded google forms
-    images = models.TextField(max_length=2000, default='')
-    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    image = models.TextField(max_length=2000, default='')
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
 class SubmitedCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     date_submited = models.DateTimeField(auto_now=False, auto_now_add=True)
     is_active = models.BooleanField(default=True)
     current_module = models.IntegerField(default=0)
+    current_chapter = models.IntegerField(default=0)
     current_section = models.IntegerField(default=0)
     video_paused_on = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
