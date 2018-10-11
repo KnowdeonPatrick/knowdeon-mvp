@@ -21,30 +21,46 @@ class Course(models.Model):
     course_overview = models.TextField(max_length=2000, default='')
     is_active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.course_name
+
 class Module(models.Model):
     module_name = models.CharField(max_length=256, default='')
+    position = models.IntegerField(default=0)
     module_overview = models.TextField(max_length=2000, default='')
     is_active = models.BooleanField(default=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.module_name
+
 class Chapter(models.Model):
     chapter_name = models.CharField(max_length=256, default='')
     chapter_overview = models.TextField(max_length=2000, default='')
+    position = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.chapter_name
 
 class Section(models.Model):
     section_name = models.CharField(max_length=256, default='')
     section_overview = models.TextField(max_length=2000, default='')
+    position = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.section_name
+
 class Item(models.Model):
     item_name = models.CharField(max_length=256, default='')
-    item_text = models.TextField(max_length=2000, default='')
-    video_link = models.CharField(max_length=256, default='') # path or url
-    quiz = models.TextField(max_length=2000, default='') # embeded google forms
-    image = models.TextField(max_length=2000, default='')
+    position = models.IntegerField(default=0)
+    item_text = models.TextField(max_length=2000, default='null')
+    video_link = models.CharField(max_length=256, default='null') # path or url
+    quiz = models.TextField(max_length=2000, default='null') # embeded google forms
+    image = models.TextField(max_length=2000, default='null')
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
 class SubmitedCourse(models.Model):
@@ -56,5 +72,5 @@ class SubmitedCourse(models.Model):
     current_section = models.IntegerField(default=0)
     video_paused_on = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_favourite = models.BooleanField(default=True)
-    completed = models.BooleanField(default=True)
+    is_favourite = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)

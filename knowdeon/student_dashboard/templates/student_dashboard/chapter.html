@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+
+
+{% block content%}
+<div class="container">
+    <h1><u>{{chapter.module.position}}.{{chapter.position}} {{chapter.chapter_name}}</u></h1>
+    <p>{{chapter.chapter_overview}}</p>
+    <div>
+        <ul class="section">
+            {% for section in sections %}
+                <div class="card text-left">
+                    <h6><li><i><u>{{chapter.module.position}}.{{chapter.position}}.{{section.position}} {{section.section_overview}}</u></i></li></h6>
+                    {% for item in items %}
+                        {% if section.id == item.section.id %}
+                            {% if item.video_link != 'null' %}
+                                <div class="video-container">
+                                    <iframe src="{{item.video_link}}" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                            {% elif item.item_text != 'null' %}
+                                <p>{{item.item_text}}</p>
+                            {% elif item.image != 'null' %}
+                                {{item.image}}
+                            {% endif%}
+                        {% endif %}
+                    {% endfor %}      
+                </div>
+            {% endfor %}
+        </ul>
+        <div class="float-right"><a id="next-section" class="btn bg-knowdeon-blue text-light" data-current_section="{{sections.last.id}}"
+            data-current_chapter="{{chapter.id}}"
+            >Next >> </a></div>
+    </div>
+</div>
+{% endblock %}

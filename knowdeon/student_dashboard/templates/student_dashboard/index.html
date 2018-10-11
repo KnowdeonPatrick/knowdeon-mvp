@@ -3,22 +3,37 @@
 
 {% block content%}
 
-<h1>Dashboard</h1>
+<h1>Student Dashboard</h1>
 <div class="row">
     <div class="col-6">
         <h3>My courses</h3>
-        <div class="card"><b>card</b></div>
-        <div class="card">{{card | safe}}</div>
-        {% for course in courses %}
+        <!-- <div class="card"><b>card</b></div>
+        <div class="card">{{card | safe}}</div> -->
+        {% for submited_course in submited_courses %}
             <div class="card">
-                <h2>{{course.course_name}}</h2>
-                    <p>Duration about {{course.expected_duration}} hours</p>
-                <p>{{course.course_overview}}</p>
+                <a class="bg-knowdeon-blue text-light" href="/student_dashboard/course/1/">
+                    <div class="card-body">
+                    <h2 class="card-title">{{submited_course.course.course_name}}</h2>
+                    <p>Duration about {{submited_course.course.expected_duration}} hours</p>
+                    <p class="card-text">{{submited_course.course.course_overview}}</p>
+                </div>
+                </a>
             </div>
         {% endfor %}
     </div>
     <div class="col-6">
         <h3>Recomended courses</h3>
+        {% for recomended_course in recomended_courses %}
+        <div class="card">
+            <a class="bg-knowdeon-blue text-light" href="#">
+                <div class="card-body">
+                <h2 class="card-title">{{recomended_course.course_name}}</h2>
+                <p>Duration about {{recomended_course.expected_duration}} hours</p>
+                <p class="card-text">{{recomended_course.course_overview}}</p>
+            </div>
+            </a>
+        </div>
+    {% endfor %}
     </div>
 
 </div>

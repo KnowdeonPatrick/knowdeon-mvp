@@ -1,0 +1,45 @@
+{% extends 'main.html' %}
+
+
+{% block content%}
+<div class="container">
+<h1>{{submited_course.course.course_name}}</h1>
+<p>{{submited_course.course.course_overview}}</p>
+<div>
+    <a class="btn bg-knowdeon-blue text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{chapters.first.id}}/">Begin</a>
+</div>
+<div>
+    <ol>
+        {% for module in modules %}
+            <div class="card text-left">
+                    <h4><li>{{module.module_name}}</li></h4>
+                <ol>
+                {% for chapter in chapters %}
+                    {% if module.id == chapter.module.id %}
+                        {% if module.position < submited_course.current_module %}
+                            <a href="/student_dashboard/chapter/{{submited_course.id}}/{{chapter.id}}/">
+                                <li>{{chapter.chapter_name}}</li>
+                            </a>
+                        {% elif module.position == submited_course.current_module and chapter.position <= submited_course.current_chapter %}
+                            <a href="/student_dashboard/chapter/{{submited_course.id}}/{{chapter.id}}/">
+                                <li>{{chapter.chapter_name}}</li>
+                            </a>
+                        {% else %}
+                            <li>                            
+                                {{chapter.chapter_name}}
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                </ol>
+            </div>
+        {% endfor %}
+    </ol>
+</div>
+
+
+
+
+
+</div>
+{% endblock %}
