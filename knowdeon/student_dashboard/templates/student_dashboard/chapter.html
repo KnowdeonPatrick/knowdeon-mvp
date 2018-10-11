@@ -26,9 +26,19 @@
                 </div>
             {% endfor %}
         </ul>
-        <div class="float-right"><a id="next-section" class="btn bg-knowdeon-blue text-light" data-current_section="{{sections.last.id}}"
-            data-current_chapter="{{chapter.id}}"
-            >Next >> </a></div>
-    </div>
+        <div>
+        <div >
+            {% if sectios %}
+            <a id="next-section" class="btn bg-knowdeon-blue text-light" data-current_section="{{sections.last.id}}"
+            data-current_chapter="{{chapter.id}}">Next >> </a>
+            <h1>This chapter is empty (There are no Sections)</h1>
+            {% else %}
+
+            {% endif %}
+        </div>
+        <div>
+            <a id="next-section" href="/student_dashboard/chapter/1/2/" class="btn bg-knowdeon-blue text-light">Next Chapter>> </a>
+        </div>
+        </div>
 </div>
 {% endblock %}
