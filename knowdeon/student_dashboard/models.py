@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -11,6 +13,12 @@ class Profile(models.Model):
     company = models.CharField(max_length=256, default='')
     industry = models.CharField(max_length=256, default='')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    @receiver(post_save, sender=User)
+    def update_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+        instance.profile.save() 
 
 
 class Course(models.Model):
@@ -67,9 +75,9 @@ class SubmitedCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     date_submited = models.DateTimeField(auto_now=False, auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    current_module = models.IntegerField(default=0)
-    current_chapter = models.IntegerField(default=0)
-    current_section = models.IntegerField(default=0)
+    current_module = models.IntegerField(default=1)
+    current_chapter = models.IntegerField(default=1)
+    current_section = models.IntegerField(default=1)
     video_paused_on = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_favourite = models.BooleanField(default=False)

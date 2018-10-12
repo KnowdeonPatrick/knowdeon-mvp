@@ -1,0 +1,22 @@
+
+
+
+{% block content%}
+<h1>New section added HERE</h1>
+
+<div class="card text-left">
+    <h6><li><i><u>{{submited_course.current_module}}.{{submited_course.current_chapter}}.{{submited_course.current_section}} {{next_section.section_overview}}</u></i></li></h6>
+    {% for item in items %}
+            {% if item.video_link != 'null' %}
+                <div class="video-container">
+                    <iframe src="{{item.video_link}}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            {% elif item.item_text != 'null' %}
+                <p>{{item.item_text}}</p>
+            {% elif item.image != 'null' %}
+                {{item.image}}
+            {% endif%}
+    {% endfor %}      
+</div>
+
+{% endblock %}

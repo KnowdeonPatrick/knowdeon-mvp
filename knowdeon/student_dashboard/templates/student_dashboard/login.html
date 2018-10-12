@@ -1,8 +1,10 @@
+{% load static %}
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static '/student_dashboard/css/dashboard.css' %}">
 </head>
-{% load static %}
+
 <body>
 <div class="container-fluid text-center bg-light mt-5">
     <h2>Login Knodeon Student Dashboard</h2>
@@ -12,15 +14,21 @@
             <form class="mx-auto" method="post">
             {% csrf_token %}
             <p>
+                <fieldset class="form-control">
                 <label for="id_username">Email:</label> <input type="text" name="username" autofocus maxlength="254" required id="id_username" />
+                </fieldset>
             </p>
             <p>
+                <fieldset class="form-control">
                 <label for="id_password">Password:</label> <input type="password" name="password" required id="id_password" />
-                <button type="button" id="show_hide" name="show_hide">eye</button>
+                <button type="button" id="show_hide" name="show_hide">Show</button>
+                </fieldset>
             </p>
-            <button class="btn btn-block btn-info" type="submit">Login</button>
+            <button class="btn btn-block bg-knowdeon-blue" type="submit">Login</button>
             </form>
-            <a href='/student_dashboard/reset-password/'>I forgot my password</a>
+            <p><a href='#'>I forgot my password</a></p>
+            <p>You do not have account.</p>
+            <button class="btn btn-block bg-knowdeon-blue" href='/student_dashboard/signup/'>Sign up</button>
         </div>
     </div>
 </div>

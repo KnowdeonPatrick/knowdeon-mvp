@@ -1,0 +1,42 @@
+
+
+
+{% block content %}
+{% load static %}
+    <head>
+        <title>Sign up</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static '/student_dashboard/css/dashboard.css' %}">
+    </head>
+    
+    <body>
+    <div class="container-fluid text-center bg-light mt-5">
+
+        <div class="row">
+            <div class="mx-auto mt-4">
+                <h2>Sign up</h2>
+                <form class="mx-auto text-right" method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <p> <fieldset class="form-control">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </fieldset>
+                    <fieldset class="text-center">
+                        {% if field.help_text %}
+                        <small class="text-left" style="color: grey">{{ field.help_text | safe }}</small>
+                        {% endif %}
+                    </fieldset>
+                        {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                        {% endfor %}
+                    </p>
+                    {% endfor %}
+                    <button class="btn bg-knowdeon-blue btn-block" type="submit">Sign up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>
+
+{% endblock %}

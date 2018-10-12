@@ -44,18 +44,27 @@ $.ajaxSetup({
 $(document).ready(function(){
     $('#next-section').on('click',function(){
 
-        var currentSection = $('#next-section').data('current_section');
-        var currentChapter = $('#next-section').data('current_chapter');
+        var submitedCourse = $('#next-section').data('submited_course');
+        // var sections = document.getElementById("sections");
+
         $.ajax({
             type        : 'POST',
             url         : '/student_dashboard/next-section/', // the url where we want to POST
-            data        :  { 'current_section' :currentSection,
-                            'current_chapter' : current_chapter,
+            data        :  { 'submited_course' : submitedCourse,
+                            // 'current_chapter' : current_chapter,
             }, // our data object
             dataType    : 'html', // what type of data do we expect back from the server
             encode      : true,
             success     : function(result){
-                console.log('result.status')
+               
+               if(result.search('id="next-chapter"') !== -1 || result.search('id="completed_course"') !== -1){
+                    $('#next-section').remove();
+                    $('#next-buttons').append(result)
+               } 
+               else {
+                    $('#sections').append(result)
+               }
+               console.log(result)
             },
             error       : function(error){
                 console.log("error "+ error)
