@@ -45,7 +45,7 @@ def course_view(request, *args, **kwargs):
 def chapter_view(request, *args, **kwargs):
     submited_course = SubmitedCourse.objects.select_related('course').get(id=kwargs['submited_course'])
     chapter = Chapter.objects.select_related('module').get(id=kwargs['chapter_id'])
-    sections = Section.objects.select_related('chapter').filter(chapter_id=chapter.id)
+    sections = Section.objects.select_related('chapter').filter(chapter_id=chapter.id).order_by('position')
     context = {'submited_course' : submited_course, 'chapter': chapter}
     if chapter.module.position == submited_course.current_module  and chapter.position == submited_course.current_chapter:
         # this chapter is not completed yet
