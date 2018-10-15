@@ -119,6 +119,10 @@ body {
   height: 100%;
   }
 
-.section p {
+.sections p {
+  font-size: 1.25rem;
+}
+
+.paragraph {
   font-size: 1.25rem;
 }

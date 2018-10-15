@@ -2,32 +2,31 @@
 
 
 {% block content%}
-<div class="container">
+<div class="container text-light bg-dark">
 <h1>{{submited_course.course.course_name}}</h1>
-<p>{{submited_course.course.course_overview}}</p>
+<p class="paragraph">{{submited_course.course.course_overview}}</p>
 <div>
-    <a class="btn bg-knowdeon-blue text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{chapters.first.id}}/">Begin</a>
+    <p><a class="btn bg-knowdeon-blue text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{chapters.first.id}}/">Begin</a></p>
+    <h2>LESSON PLAN</h2>
 </div>
 <div>
     <ol>
         {% for module in modules %}
-            <div class="card text-left">
+            <div class="card text-left bg-secondary">
                     <h4><li>{{module.module_name}}</li></h4>
                 <ol>
                 {% for chapter in chapters %}
                     {% if module.id == chapter.module.id %}
                         {% if module.position < submited_course.current_module %}
                             <a href="/student_dashboard/chapter/{{submited_course.id}}/{{chapter.id}}/">
-                                <li>{{chapter.chapter_name}}</li>
+                                <h6><li class="text-warning">{{chapter.chapter_name}}</li></h6>
                             </a>
                         {% elif module.position == submited_course.current_module and chapter.position <= submited_course.current_chapter %}
                             <a href="/student_dashboard/chapter/{{submited_course.id}}/{{chapter.id}}/">
-                                <li>{{chapter.chapter_name}}</li>
+                                <h6><li class="text-warning">{{chapter.chapter_name}}</li></h6>
                             </a>
                         {% else %}
-                            <li>                            
-                                {{chapter.chapter_name}}
-                            </li>
+                            <h6><li>{{chapter.chapter_name}}</li></h6>
                         {% endif %}
                     {% endif %}
                 {% endfor %}

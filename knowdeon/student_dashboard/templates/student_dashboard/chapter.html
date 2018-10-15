@@ -2,34 +2,65 @@
 
 
 {% block content%}
+{% load static %}
 <div class="container">
     <h1><u>{{chapter.module.position}}.{{chapter.position}} {{chapter.chapter_name}}</u></h1>
     <p>{{chapter.chapter_overview}}</p>
     <div>
-        <ul id="sections" class="sections">
+        <div id="sections" class="sections">
             {% for section in sections %}
-                <div class="card text-left">
-                    <h6><li><i><u>{{chapter.module.position}}.{{chapter.position}}.{{section.position}} {{section.section_overview}}</u></i></li></h6>
+                <div class="text-left bg-secondary text-light">
+                    <h4><u>{{chapter.module.position}}.{{chapter.position}}.{{section.position}} {{section.section_name}}</u></h4><br>
                     {% for item in items %}
                         {% if section.id == item.section.id %}
                             {% if item.video_link != 'null' %}
                                 <div class="video-container">
                                     <iframe src="{{item.video_link}}" frameborder="0" allowfullscreen></iframe>
                                 </div>
+                                <br>
                             {% elif item.item_text != 'null' %}
-                                <p>{{item.item_text}}</p>
+                                <p class="text-justify">{{item.item_text}}</p>
                             {% elif item.image != 'null' %}
-                                {{item.image}}
+                                <div class="text-center">
+                                <p><img  src="{% static '/student_dashboard/images/' %}{{item.image}}"></p>
+                                </div>
                             {% endif%}
                         {% endif %}
                     {% endfor %}      
                 </div>
             {% endfor %}
-        </ul>
-        <div id="next-buttons">
-            <div>
-                <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}">Next >> </a>
+            
+            {% if not chapter_review %}
+            <!-- First time in this chapter -->
+            <div id="next-buttons" class="text-right">
+                <div>
+                    <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}">Next >> </a>
+                </div>
             </div>
+            {% else %}
+            <!-- This chapter was passed before -->
+                    {% if next_chapter %}
+                        <div class="text-center">
+                            <div>
+                                <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Chapter</a>
+                            </div>
+                        </div>                                       
+                    {% elif more_modules %}
+                        <h3>End of the module</h3>
+                        <div class="text-center">
+                            <div>
+                                <a class="btn bg-danger text-light" href="/student_dashboard/course/{{submited_course.id}}/">Back to course plan</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <h3>End of the course</h3>
+                        <div class="text-center">
+                            <div>
+                                <a class="btn bg-danger text-light" href="/student_dashboard/course/{{submited_course.id}}/">Back to course plan</a>
+                            </div>
+                        </div>
+                    {% endif %}
+            {% endif %}
         </div>
 </div>
 {% endblock %}

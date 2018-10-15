@@ -11,7 +11,7 @@
         <div class="card">{{card | safe}}</div> -->
         {% for submited_course in submited_courses %}
             <div class="card">
-                <a class="bg-knowdeon-blue text-light" href="/student_dashboard/course/1/">
+                <a class="bg-knowdeon-blue text-light" href="/student_dashboard/course/{{submited_course.id}}/">
                     <div class="card-body">
                     <h2 class="card-title">{{submited_course.course.course_name}}</h2>
                     <p>Duration about {{submited_course.course.expected_duration}} hours</p>

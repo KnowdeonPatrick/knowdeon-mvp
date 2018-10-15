@@ -46,7 +46,6 @@ $(document).ready(function(){
 
         var submitedCourse = $('#next-section').data('submited_course');
         // var sections = document.getElementById("sections");
-
         $.ajax({
             type        : 'POST',
             url         : '/student_dashboard/next-section/', // the url where we want to POST
@@ -62,6 +61,7 @@ $(document).ready(function(){
                     $('#next-buttons').append(result)
                } 
                else {
+                    $('#next-buttons').remove();
                     $('#sections').append(result)
                }
                console.log(result)

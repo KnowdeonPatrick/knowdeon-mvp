@@ -1,22 +1,29 @@
 
 
-
+{% load static %}
 {% block content%}
-<h1>New section added HERE</h1>
 
-<div class="card text-left">
-    <h6><li><i><u>{{submited_course.current_module}}.{{submited_course.current_chapter}}.{{submited_course.current_section}} {{next_section.section_overview}}</u></i></li></h6>
+
+<div class="text-left">
+    <h4><u>{{submited_course.current_module}}.{{submited_course.current_chapter}}.{{submited_course.current_section}} {{next_section.section_name}}</u></h4><br>
     {% for item in items %}
             {% if item.video_link != 'null' %}
                 <div class="video-container">
                     <iframe src="{{item.video_link}}" frameborder="0" allowfullscreen></iframe>
-                </div>
+                </div><br>
             {% elif item.item_text != 'null' %}
-                <p>{{item.item_text}}</p>
+                <p class="text-justify">{{item.item_text}}</p>
             {% elif item.image != 'null' %}
-                {{item.image}}
+                <div class="text-center">
+                    <p><img  src="{% static '/student_dashboard/images/' %}{{item.image}}"></p>
+                </div>
             {% endif%}
     {% endfor %}      
 </div>
-
+<div id="next-buttons" class="text-right myclass">
+    <div>
+        <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}">Next >> </a>
+    </div>
+</div>
+<script src="{% static '/student_dashboard/js/index.js' %}"></script>
 {% endblock %}
