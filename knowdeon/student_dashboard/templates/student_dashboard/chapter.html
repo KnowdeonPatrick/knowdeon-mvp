@@ -39,17 +39,18 @@
             </div>
             {% else %}
             <!-- This chapter was passed before -->
-                    {% if next_chapter %}
-                        <div class="text-center">
-                            <div>
-                                <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Chapter</a>
-                            </div>
-                        </div>                                       
-                    {% elif more_modules %}
+                    {% if next_chapter and next_module %}
                         <h3>End of the module</h3>
                         <div class="text-center">
                             <div>
-                                <a class="btn bg-danger text-light" href="/student_dashboard/course/{{submited_course.id}}/">Back to course plan</a>
+                                <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Module</a>
+                            </div>
+                        </div>                                       
+                    {% elif next_chapter %}
+                        <h3>End of the chapter</h3>
+                        <div class="text-center">
+                            <div>
+                                <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Chapter</a>
                             </div>
                         </div>
                     {% else %}
