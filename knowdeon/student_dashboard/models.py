@@ -7,11 +7,11 @@ from django.dispatch import receiver
 
 
 class Profile(models.Model):
-    background = models.TextField(max_length=2000, default='')
-    address = models.CharField(max_length=256, default='')
-    phone_number = models.CharField(max_length=20, default='')
-    company = models.CharField(max_length=256, default='')
-    industry = models.CharField(max_length=256, default='')
+    background = models.TextField(max_length=2000, null=True, default='')
+    address = models.CharField(max_length=256, null=True, default='')
+    phone_number = models.CharField(max_length=20, null=True, default='')
+    company = models.CharField(max_length=256, null=True, default='')
+    industry = models.CharField(max_length=256, null=True, default='')
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     @receiver(post_save, sender=User)
