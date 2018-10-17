@@ -12,7 +12,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             user.refresh_from_db()  # load the profile instance created by the signal
-            user.profile.phone_number = form.cleaned_data.get('phone_number')
+            # user.profile.phone_number = form.cleaned_data.get('phone_number')
             user.save()
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=user.email, password=raw_password)
@@ -124,7 +124,7 @@ def next_section(request):
                 more_chapters = Chapter.objects.filter(module__id=next_module.id).order_by('position')
                 if more_chapters:
                     next_chapter = more_chapters[0]
-                    
+
                 return render(request, 'student_dashboard/_next_module_button.html', {'submited_course' : submited_course, 'next_chapter' : next_chapter })
 
             else:
