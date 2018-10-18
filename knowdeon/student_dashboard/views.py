@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from knowdeon.forms import SignUpForm
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 # Create your views here.
 def signup(request):
@@ -51,6 +52,24 @@ def chapter_view(request, *args, **kwargs):
         # this chapter is not completed yet
         sections = sections.filter(position__lte=submited_course.current_section)
         context['chapter_review'] = False
+
+        # check what button to put at the bottom
+
+        more_sections = Section.objects.select_related('chapter').filter(chapter_id=chapter.id, position__gt=submited_course.current_section)
+        context['more_sections'] = more_sections
+        if not more_sections:
+            more_chapters = Chapter.objects.filter(
+            module__course__submitedcourse__id=submited_course.id,
+            module__position=submited_course.current_module,
+            position__gt=submited_course.current_chapter,).order_by('position')
+            context['more_chapters'] = more_chapters
+            if not more_chapters:
+                more_modules = Module.objects.filter(
+                course__submitedcourse__id=submited_course.id,
+                position__gt=submited_course.current_module,).order_by('position')
+                context['more_modules'] = more_modules
+                if not more_modules:
+                    context['complete_course'] = True
     else:
         # this chapter was already viewed before
         context['chapter_review'] = True
@@ -64,74 +83,104 @@ def chapter_view(request, *args, **kwargs):
                 next_chapters = Chapter.objects.filter(module__id=context['next_module'].id).order_by('position')
                 context['next_chapter'] = next_chapters[0]
             else:
-                pass
+                
                 context['end_course'] = True
                 #end of the course
     context['sections'] = sections
-    context['items'] = Item.objects.select_related('section').filter(section__chapter__id=kwargs['chapter_id']) #filter.(section__chapter__module__course_id=submited_course.course.id) 
+    context['items'] = Item.objects.select_related('section').filter(section__chapter__id=kwargs['chapter_id']).order_by('position') #filter.(section__chapter__module__course_id=submited_course.course.id) 
 
     return render(request, 'student_dashboard/chapter.html', context)
 
 def next_section(request):
+
     submited_course_id = request.POST.get('submited_course')
 
     submited_course = SubmitedCourse.objects.get(id=submited_course_id)
-    # if current section < max section.position in the chapter
+    
+    if request.POST.get('next') == 'chapter':
+        next_chapters = Chapter.objects.filter(module__course__submitedcourse__id=submited_course.id,
+            module__position=submited_course.current_module,
+            position__gt=submited_course.current_chapter,).order_by('position')
+        submited_course.current_chapter += 1
+        submited_course.current_section = 1
+        submited_course.save()
+    if request.POST.get('next') == 'module':
+        submited_course.current_module += 1
+        submited_course.current_chapter = 1
+        submited_course.current_section = 1
+        submited_course.save()
+        next_chapters = Chapter.objects.filter(module__course__submitedcourse__id=submited_course.id,
+            module__position=submited_course.current_module).order_by('position')
+    if request.POST.get('next') == 'complete':
+        submited_course.completed = True
+        submited_course.save()
+        return HttpResponse('http://' + request.get_host() + '/student_dashboard/course/' + str(submited_course_id) + '/')
+
+    if request.POST.get('next') in ['chapter', 'module', 'complete']:
+
+        if next_chapters:
+            next_chapter_id = next_chapters[0].id
+        return HttpResponse('http://' + request.get_host() + '/student_dashboard/chapter/' + str(submited_course_id) + '/' + str(next_chapter_id) + '/')
+
     more_sections = Section.objects.filter(
         chapter__module__course__submitedcourse__id=submited_course.id,
         chapter__module__position=submited_course.current_module,
         chapter__position=submited_course.current_chapter,
         position__gt=submited_course.current_section,).order_by('position')
-    if more_sections:
+    if len(more_sections) > 1:
         # next_section = more_sections.get(position=submited_course.current_section + 1)
         next_section = more_sections[0]
         submited_course.current_section += 1
         submited_course.save()
-        items = Item.objects.filter(section__id=next_section.id)
+        items = Item.objects.filter(section__id=next_section.id).order_by('position')
+        next_button = 'section'
 
-        return render(request, 'student_dashboard/_section.html', {'submited_course' : submited_course ,'items' : items, 'next_section' : next_section })
+        return render(request, 'student_dashboard/_section.html', {'submited_course' : submited_course ,'items' : items, 'next_button' : next_button })
+
+    more_chapters = Chapter.objects.filter(
+        module__course__submitedcourse__id=submited_course.id,
+        module__position=submited_course.current_module,
+        position__gt=submited_course.current_chapter,).order_by('position')
+    
+    if more_sections: #last one
+        next_section = more_sections[0]
+        
+        items = Item.objects.filter(section__id=next_section.id).order_by('position')
+
+    # no sections inserted for this chapter
+    else:
+        items = {}
+            
+    if more_chapters:
+        # next_chapter = more_chapters.get(position=submited_course.current_chapter + 1)
+        next_chapter = more_chapters[0]
+        # move to next chapter
+        #next chapter, first section
+        submited_course.current_section += 1
+        submited_course.save()
+        next_button = 'chapter'
+
+        return render(request, 'student_dashboard/_section.html', {'submited_course' : submited_course, 'items' : items, 'next_button' : next_button})
+
+    more_modules = Module.objects.filter(
+        course__submitedcourse__id=submited_course.id,
+        position__gt=submited_course.current_module,).order_by('position')
+
+    if more_modules:
+        # next_module = more_modules.get(position=submited_course.current_module + 1)
+        next_module = more_modules[0]
+        submited_course.current_section += 1
+        submited_course.save()
+        next_button = 'module'
+
+        return render(request, 'student_dashboard/_section.html', {'submited_course' : submited_course, 'items' : items, 'next_button' : next_button})
 
     else:
-        more_chapters = Chapter.objects.filter(
-            module__course__submitedcourse__id=submited_course.id,
-            module__position=submited_course.current_module,
-            position__gt=submited_course.current_chapter,).order_by('position')
-        if more_chapters:
-            # next_chapter = more_chapters.get(position=submited_course.current_chapter + 1)
-            next_chapter = more_chapters[0]
-            # move to next chapter
-            submited_course.current_chapter += 1
-            #next chapter, first section
-            submited_course.current_section = 1
-            submited_course.save()
+        submited_course.current_section += 1
+        submited_course.save()
+        next_button = 'complete_course'
 
-            return render(request, 'student_dashboard/_next_chapter_button.html', {'submited_course' : submited_course,'next_chapter' : next_chapter})
-        
-        else:
-            more_modules = Module.objects.filter(
-                course__submitedcourse__id=submited_course.id,
-                position__gt=submited_course.current_module,
-            ).order_by('position')
-            if more_modules:
-                # next_module = more_modules.get(position=submited_course.current_module + 1)
-                next_module = more_modules[0]
-                # move to next module
-                submited_course.current_module += 1
-                # next module, first chapter, first section
-                submited_course.current_chapter = 1
-                submited_course.current_section = 1
-                submited_course.save()
-                more_chapters = Chapter.objects.filter(module__id=next_module.id).order_by('position')
-                if more_chapters:
-                    next_chapter = more_chapters[0]
-
-                return render(request, 'student_dashboard/_next_module_button.html', {'submited_course' : submited_course, 'next_chapter' : next_chapter })
-
-            else:
-                submited_course.completed = True
-                submited_course.save()
-                # render the Congaratulations page
-                return render(request, 'student_dashboard/_completed_course.html', {'submited_course' : submited_course})
+        return render(request, 'student_dashboard/_section.html', {'submited_course' : submited_course, 'items' : items, 'next_button' : next_button})
 
 def reset_progress(request, *args, **kwargs):
     submited_course = SubmitedCourse.objects.get(id=kwargs['submited_course'])

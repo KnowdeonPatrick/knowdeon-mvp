@@ -45,26 +45,34 @@ $(document).ready(function(){
     $('#next-section').on('click',function(){
 
         var submitedCourse = $('#next-section').data('submited_course');
+        var next = $('#next-section').data('next');
         // var sections = document.getElementById("sections");
         $.ajax({
             type        : 'POST',
             url         : '/student_dashboard/next-section/', // the url where we want to POST
             data        :  { 'submited_course' : submitedCourse,
+                            'next' : next,
                             // 'current_chapter' : current_chapter,
             }, // our data object
             dataType    : 'html', // what type of data do we expect back from the server
             encode      : true,
             success     : function(result){
                
-               if(result.search('id="next-chapter"') !== -1 || result.search('id="completed_course"') !== -1){
-                    $('#next-section').remove();
-                    $('#next-buttons').append(result)
+            //    if(result.search('id="next-chapter"') !== -1 || result.search('id="completed_course"') !== -1){
+            if(result.search('http://') !== -1 && result.search('/student_dashboard/chapter/') !== -1){
+                console.log(result);
+                    window.location.href = result;
+                    // $('#next-section').remove();
+                    // $('#next-buttons').append(result)
                } 
+               else if(result.search('http://') !== -1 && result.search('/student_dashboard/course/') !== -1) {
+                    window.location.href = result;
+                }
                else {
                     $('#next-buttons').remove();
                     $('#sections').append(result)
                }
-               console.log(result)
+
             },
             error       : function(error){
                 console.log("error "+ error)

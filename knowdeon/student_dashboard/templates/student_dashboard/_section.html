@@ -1,29 +1,48 @@
-
-
 {% load static %}
 {% block content%}
 
-
-<div class="text-left">
-    <h4><u>{{submited_course.current_module}}.{{submited_course.current_chapter}}.{{submited_course.current_section}} {{next_section.section_name}}</u></h4><br>
-    {% for item in items %}
-            {% if item.video_link != 'null' %}
-                <div class="video-container">
-                    <iframe src="{{item.video_link}}" frameborder="0" allowfullscreen></iframe>
-                </div><br>
-            {% elif item.item_text != 'null' %}
-                <p class="text-justify">{{item.item_text}}</p>
-            {% elif item.image != 'null' %}
-                <div class="text-center">
-                    <p><img  src="{% static '/student_dashboard/images/' %}{{item.image}}"></p>
-                </div>
-            {% endif%}
-    {% endfor %}      
-</div>
-<div id="next-buttons" class="text-right myclass">
-    <div>
-        <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}">Next >> </a>
+    <div class="text-left">
+        <h4><u>{{submited_course.current_module}}.{{submited_course.current_chapter}}.{{submited_course.current_section}} {{next_section.section_name}}</u></h4><br>
+        {% for item in items %}
+                {% if item.video_link != 'null' %}
+                    <div class="video-container">
+                        <iframe src="{{item.video_link}}" frameborder="0" allowfullscreen></iframe>
+                    </div><br>
+                {% elif item.item_text != 'null' %}
+                    <p class="text-justify">{{item.item_text}}</p>
+                {% elif item.image != 'null' %}
+                    <div class="text-center">
+                        <p><img  src="{% static '/student_dashboard/images/' %}{{item.image}}"></p>
+                    </div>
+                {% endif%}
+        {% endfor %}      
     </div>
-</div>
+
+    {% if next_button == 'section' %}
+        <div id="next-buttons" class="text-center">
+            <div>
+                <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="section">Next >> </a>
+            </div>
+        </div>
+    {% elif next_button == 'chapter' %}
+        <div id="next-buttons" class="text-center">
+            <div>
+                <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="chapter">Next Chapter</a>
+            </div>
+        </div>
+    {% elif next_button == 'module' %}
+        <div id="next-buttons" class="text-center">
+            <div>
+                <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="module">Next Module</a>
+            </div>
+        </div>
+    {% elif next_button == 'complete_course' %}
+        <div id="next-buttons" class="text-center">
+            <div>
+                <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="complete">Complete Course</a>
+            </div>
+        </div>
+    {% endif %}
+
 <script src="{% static '/student_dashboard/js/index.js' %}"></script>
 {% endblock %}

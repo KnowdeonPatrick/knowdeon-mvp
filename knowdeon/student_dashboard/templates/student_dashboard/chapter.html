@@ -31,36 +31,41 @@
             {% endfor %}
             
             {% if not chapter_review %}
-            <!-- First time in this chapter -->
-            <div id="next-buttons" class="text-right">
-                <div>
-                    <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}">Next >> </a>
-                </div>
-            </div>
+            <!-- This chapter is not passed completely-->
+                        <div id="next-buttons" next-buttons class="text-center">
+                            <div>
+                                {% if more_sections %}
+                                    <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="section">Next >></a>
+                                {% elif more_chapters %}
+                                    <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="chapter">Next Chapter</a>
+                                {% elif more_modules %}
+                                    <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="module">Next Module</a>
+                                {% elif complete_course %}
+                                    <a id="next-section" class="btn bg-knowdeon-blue text-light" data-submited_course="{{submited_course.id}}" data-next="complete">Complete course</a>
+                                {% endif %}
+                            </div>
+                        </div>
             {% else %}
             <!-- This chapter was passed before -->
-                    {% if next_chapter and next_module %}
-                        <h3>End of the module</h3>
-                        <div class="text-center">
-                            <div>
-                                <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Module</a>
+                        {% if next_chapter and next_module %}
+                            <div class="text-center">
+                                <div>
+                                    <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Module</a>
+                                </div>
+                            </div>                                       
+                        {% elif next_chapter %}
+                            <div class="text-center">
+                                <div>
+                                    <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Chapter</a>
+                                </div>
                             </div>
-                        </div>                                       
-                    {% elif next_chapter %}
-                        <h3>End of the chapter</h3>
-                        <div class="text-center">
-                            <div>
-                                <a class="btn bg-danger text-light" href="/student_dashboard/chapter/{{submited_course.id}}/{{next_chapter.id}}/">Next Chapter</a>
+                        {% else %}
+                            <div class="text-center">
+                                <div>
+                                    <a class="btn bg-danger text-light" href="/student_dashboard/course/{{submited_course.id}}/">Back to course plan</a>
+                                </div>
                             </div>
-                        </div>
-                    {% else %}
-                        <h3>End of the course</h3>
-                        <div class="text-center">
-                            <div>
-                                <a class="btn bg-danger text-light" href="/student_dashboard/course/{{submited_course.id}}/">Back to course plan</a>
-                            </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
             {% endif %}
         </div>
 </div>
